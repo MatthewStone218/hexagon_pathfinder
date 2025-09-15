@@ -14,8 +14,10 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	start_y = 0;
 	goal_x = 0;
 	goal_y = 0;
+	
 	shader = shd_pathfind_basic;
 	static cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
+	static pathfind_shader_texel_uniform_id = shader_get_uniform(shd_pathfind_basic,"u_texel");
 	
 	width = w;
 	height = h;
@@ -128,6 +130,12 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			reset_map_pathfind_surf();
 		}
 		shader_set(shader);
+		shader_set_uniform_f(pathfind_shader_texel_uniform_id,texture_get_texel_width(surface_get_texture(map_pathfind_surf)),texture_get_texel_height(surface_get_texture(map_pathfind_surf)));
+
+		if(!surface_exists(original_surf_cmp)){
+			surface_create(original_surf_cmp,array_length(map),array_length(map[0]));
+		}
+		
 		surface_copy(original_surf_cmp,0,0,map_pathfind_surf);
 		surface_set_target(map_pathfind_surf);
 		
@@ -145,6 +153,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			}
 		}
 		
+		if(!surface_exists(surf_cmp[0])){
+			surface_create(surf_cmp[0],array_length(map),array_length(map[0]));
+		}
 		surface_set_target(surf_cmp[0]);
 		draw_clear(c_black);
 		
@@ -158,6 +169,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		shader_set(shd_down_scale);
 		for(var i = array_length(surf_cmp)-1; i > 0; i++){
+			if(!surface_exists(surf_cmp[i-1])){
+				surface_create(surf_cmp[i-1],power(2,i-1),power(2,i-1));
+			}
 			surface_set_target(surf_cmp[i-1]);
 			draw_clear(c_black);
 			draw_surface(surf_cmp[i],0,0);
@@ -169,6 +183,10 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			return {
 				status: PATHFIND_STATUS.NO_PATH,
 			}
+		}
+		
+		return {
+			status: PATHFIND_STATUS.FINDING_PATH,
 		}
 	}
 	
