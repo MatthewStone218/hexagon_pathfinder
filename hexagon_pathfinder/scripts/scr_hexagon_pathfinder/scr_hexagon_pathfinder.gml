@@ -16,7 +16,6 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	goal_y = 0;
 	shader = shd_pathfind_basic;
 	static cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
-	static down_scale_shader_size_uniform_id = shader_get_uniform(shd_down_scale,"u_size");
 	
 	width = w;
 	height = h;
@@ -51,9 +50,11 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	var _h = height + (height != 1 && (height mod 2) == 1);
 	
 	do{
-		array_push(surf_cmp,[surface_create(_w,_h),_w,_h]);
+		array_push(surf_cmp,surface_create(_w,_h));
 		_w *= 0.5;
 		_h *= 0.5;
+		_w = max(_w,1);
+		_h = max(_h,1);
 	} until(_w <= 1 && _h <= 1)
 	
 	surface_set_target(map_surf);
@@ -144,7 +145,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			}
 		}
 		
-		surface_set_target(surf_cmp[0][0]);
+		surface_set_target(surf_cmp[0]);
 		draw_clear(c_black);
 		
 		shader_set(shd_cmp)
@@ -157,14 +158,13 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		shader_set(shd_down_scale);
 		for(var i = array_length(surf_cmp)-1; i > 0; i++){
-			surface_set_target(surf_cmp[i-1][0]);
+			surface_set_target(surf_cmp[i-1]);
 			draw_clear(c_black);
-			shader_set_uniform_f(down_scale_shader_size_uniform_id,surf_cmp[i][1],surf_cmp[i][2]);
-			draw_surface(surf_cmp[i][0],0,0);
+			draw_surface(surf_cmp[i],0,0);
 		}
 		shader_reset();
 		
-		surface_set_target(surf_cmp[0][0]);	
+		surface_set_target(surf_cmp[0]);	
 		if(draw_getpixel(0,0) == #FFFFFF){
 			return {
 				status: PATHFIND_STATUS.NO_PATH,
