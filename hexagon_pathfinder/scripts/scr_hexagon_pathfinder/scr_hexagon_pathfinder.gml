@@ -15,7 +15,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	goal_x = 0;
 	goal_y = 0;
 	shader = shd_pathfind_basic;
-	cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
+	static cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
+	static down_scale_shader_size_uniform_id = shader_get_uniform(shd_down_scale,"u_size");
 	
 	width = w;
 	height = h;
@@ -139,18 +140,35 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			return;
 		} else if(_start_point_status_color != 0){
 			return {
-				status: PATHFIND_STATUS.NO_PATH,
+				status: PATHFIND_STATUS.STUCK_ON_WALL,
 			}
 		}
 		
-		surface_set_target(surf_cmp);
+		surface_set_target(surf_cmp[0][0]);
+		draw_surface(original_surf_cmp);
+		
 		shader_set(shd_cmp)
 		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture())
 		
-		
+		draw_surface(map_pathfind_surf);
 		
 		shader_reset();
 		surface_reset_target();
+		
+		shader_set(shd_down_scale);
+		for(var i = array_length(surf_cmp)-1; i > 0; i++){
+			surface_set_target(surf_cmp[i-1][0]);
+			shader_set_uniform_f(down_scale_shader_size_uniform_id,surf_cmp[i][1],surf_cmp[i][2]);
+			draw_surface(surf_cmp[i][0]);
+		}
+		shader_reset();
+		
+		surface_set_target(surf_cmp[0][0]);	
+		if(draw_getpixel(0,0) == #FFFFFF){
+			return {
+				status: PATHFIND_STATUS.NO_PATH,
+			}
+		}
 	}
 	
 	static ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,_shader = shd_pathfind_basic){
@@ -171,7 +189,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 }
 
 enum PATHFIND_STATUS{
-	NO_PATH,
 	FOUND_PATH,
-	FINDING_PATH
+	FINDING_PATH,
+	STUCK_ON_WALL,
+	NO_PATH,
 }
