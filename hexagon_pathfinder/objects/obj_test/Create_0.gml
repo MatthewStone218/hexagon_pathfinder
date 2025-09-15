@@ -5,8 +5,11 @@ global.map = hexagon_map(20,20,false,false);
 for(var i = 0; i < global.map.width; i++){
 	for(var ii = 0; ii < global.map.height; ii++){
 		var _inst = instance_create_depth(i*180,ii*140 + ((i mod 2) == 1 ? 70 : 0),0,obj_hexagon_tile);
-		_inst.map_surf_x = global.map.get_map_surf_x(i);
-		_inst.map_surf_y = global.map.get_map_surf_y(i,ii);
-		global.map.set_value(i,ii,_inst);
+		_inst.map_indexed_x = i;
+		_inst.map_indexed_y = ii;
+		_inst.map_x = global.map.get_map_surf_x(i);
+		_inst.map_y = global.map.get_map_surf_y(i,ii);
+		global.map.set_map_value(i,ii[0],_inst);
+		global.map.set_map_value(i,ii[1],_inst);
 	}
 }

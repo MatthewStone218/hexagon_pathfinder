@@ -39,15 +39,19 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	map_surf_buffer = buffer_create(1,buffer_grow,1);
 	buffer_get_surface(map_surf_buffer,map_surf,0);
 	
-	get_map_surf_x = function(xx){
+	get_map_x = function(xx){
 		return xx;
 	}
 	
-	get_map_surf_y = function(xx,yy){
+	get_map_y = function(xx,yy){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
-		if(vertical_repeat && _upper_coord+1 >= height*2 + (width >= 2) - 1){
-			_lower_coord = 0;
+		if(_upper_coord+1 >= height*2 + (width >= 2) - 1){
+			if(vertical_repeat){
+				_lower_coord = 0;
+			} else {
+				_lower_coord = -1;
+			}
 		}
 		
 		return [_upper_coord,_lower_coord];
@@ -56,11 +60,15 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	set_map_value = function(xx,yy,val){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
-		if(vertical_repeat && _upper_coord+1 >= height*2 + (width >= 2) - 1){
-			_lower_coord = 0;
+		if(_upper_coord+1 >= height*2 + (width >= 2) - 1){
+			if(vertical_repeat){
+				_lower_coord = 0;
+			} else {
+				_lower_coord = -1;
+			}
 		}
 		map[xx][_upper_coord] = val;
-		map[xx][_lower_coord] = val;
+		if(_lower_coord >= 0){ map[xx][_lower_coord] = val; }
 	}
 	
 	set_indexed_map_value = function(xx,yy,val){
