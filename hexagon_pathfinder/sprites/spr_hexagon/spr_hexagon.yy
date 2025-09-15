@@ -27,8 +27,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Sprites",
-    "path":"folders/Sprites.yy",
+    "name":"Hexagon Pathfinder",
+    "path":"folders/Hexagon Pathfinder.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

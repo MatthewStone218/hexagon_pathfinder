@@ -11,7 +11,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	vertical_repeat = v_repeat;
 	
 	if(horizon_repeat && ((width mod 2) == 1)){
-		show_error("Width of map must be even when it horizontal repeated!");
+		show_error("Width of map must be even when it horizontal repeated!",true);
 	}
 	
 	map = [];
