@@ -7,9 +7,9 @@ for(var i = 0; i < global.map._.width; i++){
 		var _inst = instance_create_depth(i*180,ii*140 + ((i mod 2) == 1 ? 70 : 0),0,obj_hexagon_tile);
 		_inst.map_indexed_x = i;
 		_inst.map_indexed_y = ii;
-		_inst.map_x = global.map._.get_map_surf_x(i);
-		_inst.map_y = global.map._.get_map_surf_y(i,ii);
-		global.map._.set_map_value(i,ii[0],_inst);
-		global.map._.set_map_value(i,ii[1],_inst);
+		_inst.map_x = global.map._.get_map_x(i);
+		_inst.map_y = global.map._.get_map_y(i,ii);
+		global.map._.set_map_value(_inst.map_indexed_x,_inst.map_indexed_x,_inst);
+		global.map._.set_map_value(_inst.map_indexed_y,_inst.map_indexed_y+1,_inst);
 	}
 }

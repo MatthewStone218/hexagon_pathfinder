@@ -7,6 +7,7 @@ function hexagon_map(w,h,h_repeat,v_repeat){
 	var _map_struct = new __class_hexagon_map__(w,h,h_repeat,v_repeat);
 	_map_struct.index = array_length(global.hexagon_maps);
 	global.hexagon_maps[_map_struct.index] = { _: _map_struct };
+	return global.hexagon_maps[_map_struct.index];
 }
 
 function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
@@ -160,7 +161,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		draw_clear(c_black);
 		
 		shader_set(shd_cmp)
-		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture(original_surf_cmp))
+		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture(original_surf_cmp));
 		
 		draw_surface(map_pathfind_surf,0,0);
 		
@@ -168,7 +169,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		surface_reset_target();
 		
 		shader_set(shd_down_scale);
-		for(var i = array_length(surf_cmp)-1; i > 0; i++){
+		for(var i = array_length(surf_cmp)-1; i > 0; i--){
 			if(!surface_exists(surf_cmp[i-1])){
 				surface_create(surf_cmp[i-1],power(2,i-1),power(2,i-1));
 			}
