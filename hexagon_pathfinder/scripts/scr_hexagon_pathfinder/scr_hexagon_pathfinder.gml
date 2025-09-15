@@ -17,7 +17,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	map = [];
 	
 	for(var i = 0; i < width; i++){
-		for(var ii = 0; ii < height+1; ii++){
+		for(var ii = 0; ii < height*2 + (width >= 2); ii++){
 			map[i][ii] = -1;
 		}
 	}
@@ -26,10 +26,21 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return xx;
 	};
 	get_map_surf_y = function(xx,yy){
-		return yy*2 + ((xx mod 2) == 1);
+		var _upper_coord = yy*2 + ((xx mod 2) == 1);
+		var _lower_coord = _upper_coord+1;
+		if(vertical_repeat && _upper_coord+1 >= height*2 + (width >= 2) - 1){
+			_lower_coord = 0;
+		}
+		
+		return [_upper_coord,_lower_coord];
 	};
 	set_value = function(xx,yy,val){
-		map[xx][yy*2 + ((xx mod 2) == 1)] = val;
-		map[xx][yy*2 + ((xx mod 2) == 1) + 1] = val;
+		var _upper_coord = yy*2 + ((xx mod 2) == 1);
+		var _lower_coord = _upper_coord+1;
+		if(vertical_repeat && _upper_coord+1 >= height*2 + (width >= 2) - 1){
+			_lower_coord = 0;
+		}
+		map[xx][_upper_coord] = val;
+		map[xx][_lower_coord] = val;
 	};
 }
