@@ -106,34 +106,38 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return _result;
 	}
 	
-	step_pathfind = function(reset_shader = true,_shader = shd_pathfind_basic){
+	step_pathfind = function(calculate_at_once = false,_shader = shd_pathfind_basic){
 		if(!surface_exists(map_pathfind_surf)){
 			reset_map_pathfind_surf();
 		}
-		if(reset_shader){
+		if(!calculate_at_once){
 			shader_set(shader);
+			surface_set_target(map_pathfind_surf);
 		}
 		
 		
 		
-		if(reset_shader){
+		if(!calculate_at_once){
 			shader_reset();
+			surface_reset_target();
 		}
 	}
 	
-	ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,set_shader = false,_shader = shd_pathfind_basic){
+	ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,calculate_at_once = false,_shader = shd_pathfind_basic){
 		start_x = _start_x;
 		start_y = _start_y;
 		goal_x = _goal_x;
 		goal_y = _goal_y;
 		shader = _shader;
-		if(set_shader){
+		if(calculate_at_once){
+			surface_set_target(map_pathfind_surf);
 			shader_set(shd_pathfind_basic);
 		}
 	}
 	
 	end_pathfind = function(){
 		shader_reset();
+		surface_reset_target();
 	}
 }
 
