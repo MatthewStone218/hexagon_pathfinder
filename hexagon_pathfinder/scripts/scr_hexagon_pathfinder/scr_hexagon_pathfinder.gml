@@ -14,7 +14,14 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		show_error("Width of map must be even when it horizontal repeated!",true);
 	}
 	
+	indexed_map = [];
 	map = [];
+	
+	for(var i = 0; i < width; i++){
+		for(var ii = 0; ii < height; ii++){
+			indexed_map[i][ii] = -1;
+		}
+	}
 	
 	for(var i = 0; i < width; i++){
 		for(var ii = 0; ii < height*2 + (width >= 2); ii++){
@@ -34,7 +41,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	
 	get_map_surf_x = function(xx){
 		return xx;
-	};
+	}
+	
 	get_map_surf_y = function(xx,yy){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
@@ -43,8 +51,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		}
 		
 		return [_upper_coord,_lower_coord];
-	};
-	set_value = function(xx,yy,val){
+	}
+	
+	set_map_value = function(xx,yy,val){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
 		if(vertical_repeat && _upper_coord+1 >= height*2 + (width >= 2) - 1){
@@ -52,7 +61,11 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		}
 		map[xx][_upper_coord] = val;
 		map[xx][_lower_coord] = val;
-	};
+	}
+	
+	set_indexed_map_value = function(xx,yy,val){
+		indexed_map[xx][yy] = val;
+	}
 	
 	reset_map_pathfind_surf = function(){
 		if(!surface_exists(map_surf)){
@@ -63,5 +76,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	
 	buffer_get_map_surf = function(){
 		buffer_get_surface(map_surf_buffer,map_surf,0);
+	}
+	
+	pathfind = function(){
+		
 	}
 }
