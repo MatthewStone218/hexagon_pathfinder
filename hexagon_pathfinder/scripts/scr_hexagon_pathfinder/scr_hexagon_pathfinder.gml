@@ -22,6 +22,16 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		}
 	}
 	
+	map_surf = surface_create(array_length(map),array_length(map[0]));
+	map_pathfind_surf = surface_create(array_length(map),array_length(map[0]));
+	
+	surface_set_target(map_surf);
+	draw_clear(c_black);
+	surface_reset_target();
+	
+	map_surf_buffer = buffer_create(1,buffer_grow,1);
+	buffer_get_surface(map_surf_buffer,map_surf,0);
+	
 	get_map_surf_x = function(xx){
 		return xx;
 	};
@@ -43,4 +53,15 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		map[xx][_upper_coord] = val;
 		map[xx][_lower_coord] = val;
 	};
+	
+	reset_map_pathfind_surf = function(){
+		if(!surface_exists(map_surf)){
+			buffer_set_surface(map_surf_buffer,map_surf,0);
+		}
+		surface_copy(map_pathfind_surf,0,0,map_surf);
+	}
+	
+	buffer_get_map_surf = function(){
+		buffer_get_surface(map_surf_buffer,map_surf,0);
+	}
 }
