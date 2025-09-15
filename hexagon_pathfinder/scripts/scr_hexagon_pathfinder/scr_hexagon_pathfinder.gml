@@ -147,7 +147,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		var _start_point_status_color = color_get_red(draw_getpixel(start_x,start_y));
 		if(_start_point_status_color == 1){
 			return;
-		} else if(_start_point_status_color != 0){
+		} else if(_start_point_status_color > 0.1 && _start_point_status_color < 0.4){
 			return {
 				status: PATHFIND_STATUS.STUCK_ON_WALL,
 			}

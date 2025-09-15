@@ -3,13 +3,72 @@
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
-
 uniform vec2 u_texel;
+
+float move_point = 0.0;
+
+bool consume_move_point(){
+	if(move_point <= 0.01960784313){// 5/255
+		return true;
+	} else {
+		return false;
+		move_point -= 0.03921568627;// 10/255
+	}
+}
 
 void main()
 {
-    vec4 baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 base_color = texture2D( gm_BaseTexture, v_vTexcoord );
+	move_point = base_color.g;
 	
+	//already calculated
+	if(base_color.r == 1.0){
+		gl_FragColor = vec4(1.0,0.0,base_color.b,1.0);
+		return;
+	}
 	
-	gl_FragColor
+	//check calculation + consume move point
+	if(base_color.r > 0.6 || base_color.r < 0.9){
+		if(consume_move_point()){
+			gl_FragColor = vec4(1.0,0.0,base_color.b,1.0);
+			return;
+		}
+		gl_FragColor = vec4(1.0,move_point,base_color.b,1.0);
+		return;
+	}
+	
+	bool is_lower_pixel = mod((mod(v_vTexcoord.x/u_texel.x,2.0)) + (mod(v_vTexcoord.y/u_texel.y,2.0)),2.0);
+    
+	if(is_lower_pixel == 1.0){
+		//lb
+	    if(texture2D( gm_BaseTexture, vec2(v_vTexcoord.x-u_texel.x,v_vTexcoord.y) ).r == 1.0){
+			//consume move point
+			if(consume_move_point()){
+				gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+				return;
+			}
+			gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
+			return;
+		}
+		//b
+	    if(texture2D( gm_BaseTexture, vec2(v_vTexcoord.x,v_vTexcoord.y+u_texel.x) ).r == 1.0){
+			//consume move point
+			if(consume_move_point()){
+				gl_FragColor = vec4(1.0,0.0,0.3529,1.0);
+				return;
+			}
+			gl_FragColor = vec4(0.7,move_point,0.3529,1.0);
+			return;
+		}
+		//rb
+	    if(texture2D( gm_BaseTexture, vec2(v_vTexcoord.x+u_texel.x,v_vTexcoord.y) ).r == 1.0){
+			//consume move point
+			if(consume_move_point()){
+				gl_FragColor = vec4(1.0,0.0,0.4314,1.0);
+				return;
+			}
+			gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
+			return;
+		}
+	}
 }
