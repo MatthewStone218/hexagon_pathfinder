@@ -10,6 +10,10 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	horizon_repeat = h_repeat;
 	vertical_repeat = v_repeat;
 	
+	if(horizon_repeat && ((width mod 2) == 1)){
+		show_error("Width of map must be even when it horizontal repeated!");
+	}
+	
 	map = [];
 	
 	for(var i = 0; i < width; i++){
@@ -18,10 +22,10 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		}
 	}
 	
-	get_x = function(xx){
+	get_map_surf_x = function(xx){
 		return xx;
 	};
-	get_y = function(xx,yy){
+	get_map_surf_y = function(xx,yy){
 		return yy*2 + ((xx mod 2) == 1);
 	};
 	set_value = function(xx,yy,val){
