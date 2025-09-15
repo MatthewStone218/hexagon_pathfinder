@@ -8,7 +8,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	start_x = 0;
 	start_y = 0;
 	goal_x = 0;
-	goal_y = 0,
+	goal_y = 0;
 	shader = shd_pathfind_basic;
 	
 	width = w;
@@ -37,6 +37,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	
 	map_surf = surface_create(array_length(map),array_length(map[0]));
 	map_pathfind_surf = surface_create(array_length(map),array_length(map[0]));
+	original_surf_cmp = surface_create(array_length(map),array_length(map[0]));
+	pixel_surf_cmp = surface_create(1,1);
 	
 	surface_set_target(map_surf);
 	draw_clear(c_black);
@@ -106,38 +108,55 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return _result;
 	}
 	
-	step_pathfind = function(calculate_at_once = false,_shader = shd_pathfind_basic){
+	step_pathfind = function(reset_shader = true,_shader = shd_pathfind_basic){
 		if(!surface_exists(map_pathfind_surf)){
 			reset_map_pathfind_surf();
 		}
-		if(!calculate_at_once){
+		if(reset_shader){
 			shader_set(shader);
-			surface_set_target(map_pathfind_surf);
+		}
+		surface_copy(original_surf_cmp,0,0,map_pathfind_surf);
+		surface_set_target(map_pathfind_surf);
+		
+		draw_surface(map_pathfind_surf,0,0);
+		
+		surface_reset_target();
+		
+		var _start_point_status_color = color_get_red(draw_getpixel(start_x,start_y));
+		if(_start_point_status_color == 1){
+			
+		} else if(_start_point_status_color != 0){
+			return {
+				status: PATHFIND_STATUS.NO_PATH,
+			}
 		}
 		
+		surface_set_target(original_surf_cmp);
 		
 		
-		if(!calculate_at_once){
+		
+		gpu_set_tex_filter(false);
+		
+		if(reset_shader){
 			shader_reset();
-			surface_reset_target();
 		}
+		
+		surface_reset_target();
 	}
 	
-	ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,calculate_at_once = false,_shader = shd_pathfind_basic){
+	ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,set_shader = false,_shader = shd_pathfind_basic){
 		start_x = _start_x;
 		start_y = _start_y;
 		goal_x = _goal_x;
 		goal_y = _goal_y;
 		shader = _shader;
-		if(calculate_at_once){
-			surface_set_target(map_pathfind_surf);
+		if(set_shader){
 			shader_set(shd_pathfind_basic);
 		}
 	}
 	
 	end_pathfind = function(){
 		shader_reset();
-		surface_reset_target();
 	}
 }
 
