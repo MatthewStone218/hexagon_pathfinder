@@ -40,6 +40,8 @@
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},},
     {"id":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},},
     {"id":{"name":"scr_hexagon_pathfinder","path":"scripts/scr_hexagon_pathfinder/scr_hexagon_pathfinder.yy",},},
+    {"id":{"name":"shd_cmp","path":"shaders/shd_cmp/shd_cmp.yy",},},
+    {"id":{"name":"shd_down_scale","path":"shaders/shd_down_scale/shd_down_scale.yy",},},
     {"id":{"name":"shd_pathfind_basic","path":"shaders/shd_pathfind_basic/shd_pathfind_basic.yy",},},
     {"id":{"name":"spr_hexagon","path":"sprites/spr_hexagon/spr_hexagon.yy",},},
   ],

@@ -1,7 +1,12 @@
 // v2.3.0에 대한 스크립트 어셋 변경됨 자세한 정보는
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 참조
+
+global.hexagon_maps = [];
+
 function hexagon_map(w,h,h_repeat,v_repeat){
-	return new __class_hexagon_map__(w,h,h_repeat,v_repeat);
+	var _map_struct = new __class_hexagon_map__(w,h,h_repeat,v_repeat);
+	_map_struct.index = array_length(global.hexagon_maps);
+	global.hexagon_maps[_map_struct.index] = { _: _map_struct };
 }
 
 function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
@@ -10,6 +15,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	goal_x = 0;
 	goal_y = 0;
 	shader = shd_pathfind_basic;
+	cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
 	
 	width = w;
 	height = h;
@@ -38,7 +44,16 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	map_surf = surface_create(array_length(map),array_length(map[0]));
 	map_pathfind_surf = surface_create(array_length(map),array_length(map[0]));
 	original_surf_cmp = surface_create(array_length(map),array_length(map[0]));
-	pixel_surf_cmp = surface_create(1,1);
+	
+	surf_cmp = [];
+	var _w = width + (width != 1 && (width mod 2) == 1);
+	var _h = height + (height != 1 && (height mod 2) == 1);
+	
+	do{
+		array_push(surf_cmp,[surface_create(_w,_h),_w,_h]);
+		_w *= 0.5;
+		_h *= 0.5;
+	} until(_w <= 1 && _h <= 1)
 	
 	surface_set_target(map_surf);
 	draw_clear(c_black);
@@ -47,11 +62,11 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	map_surf_buffer = buffer_create(1,buffer_grow,1);
 	buffer_get_surface(map_surf_buffer,map_surf,0);
 	
-	get_map_x = function(xx){
+	static get_map_x = function(xx){
 		return xx;
 	}
 	
-	get_map_y = function(xx,yy){
+	static get_map_y = function(xx,yy){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
 		if(_upper_coord+1 >= height*2 + (width >= 2) - 1){
@@ -65,7 +80,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return [_upper_coord,_lower_coord];
 	}
 	
-	set_map_value = function(xx,yy,val){
+	static set_map_value = function(xx,yy,val){
 		var _upper_coord = yy*2 + ((xx mod 2) == 1);
 		var _lower_coord = _upper_coord+1;
 		if(_upper_coord+1 >= height*2 + (width >= 2) - 1){
@@ -79,84 +94,79 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		if(_lower_coord >= 0){ map[xx][_lower_coord] = val; }
 	}
 	
-	set_indexed_map_value = function(xx,yy,val){
+	static set_indexed_map_value = function(xx,yy,val){
 		indexed_map[xx][yy] = val;
 	}
 	
-	reset_map_pathfind_surf = function(){
+	static reset_map_pathfind_surf = function(){
 		if(!surface_exists(map_surf)){
 			buffer_set_surface(map_surf_buffer,map_surf,0);
 		}
 		surface_copy(map_pathfind_surf,0,0,map_surf);
 	}
 	
-	buffer_get_map_surf = function(){
+	static buffer_get_map_surf = function(){
 		buffer_get_surface(map_surf_buffer,map_surf,0);
 	}
 	
-	pathfind = function(_start_x,_start_y,_goal_x,_goal_y,_shader = shd_pathfind_basic){
+	static pathfind = function(_start_x,_start_y,_goal_x,_goal_y,_shader = shd_pathfind_basic){
 		reset_map_pathfind_surf();
-		ready_pathfind(_start_x,_start_y,_goal_x,_goal_y,true,_shader = shd_pathfind_basic);
+		ready_pathfind(_start_x,_start_y,_goal_x,_goal_y,_shader = shd_pathfind_basic);
 		var _result;
 		
 		do{
-			_result = step_pathfind(false);
+			_result = step_pathfind();
 		} until(_result[$"status"] != PATHFIND_STATUS.FINDING_PATH)
-		
-		end_pathfind();
 		
 		return _result;
 	}
 	
-	step_pathfind = function(reset_shader = true,_shader = shd_pathfind_basic){
+	static step_pathfind = function(_shader = shd_pathfind_basic){
 		if(!surface_exists(map_pathfind_surf)){
 			reset_map_pathfind_surf();
 		}
-		if(reset_shader){
-			shader_set(shader);
-		}
+		shader_set(shader);
 		surface_copy(original_surf_cmp,0,0,map_pathfind_surf);
 		surface_set_target(map_pathfind_surf);
 		
 		draw_surface(map_pathfind_surf,0,0);
 		
 		surface_reset_target();
+		shader_reset();
 		
 		var _start_point_status_color = color_get_red(draw_getpixel(start_x,start_y));
 		if(_start_point_status_color == 1){
-			
+			return;
 		} else if(_start_point_status_color != 0){
 			return {
 				status: PATHFIND_STATUS.NO_PATH,
 			}
 		}
 		
-		surface_set_target(original_surf_cmp);
+		surface_set_target(surf_cmp);
+		shader_set(shd_cmp)
+		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture())
 		
 		
 		
-		gpu_set_tex_filter(false);
-		
-		if(reset_shader){
-			shader_reset();
-		}
-		
+		shader_reset();
 		surface_reset_target();
 	}
 	
-	ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,set_shader = false,_shader = shd_pathfind_basic){
+	static ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,_shader = shd_pathfind_basic){
 		start_x = _start_x;
 		start_y = _start_y;
 		goal_x = _goal_x;
 		goal_y = _goal_y;
 		shader = _shader;
-		if(set_shader){
-			shader_set(shd_pathfind_basic);
-		}
 	}
 	
-	end_pathfind = function(){
-		shader_reset();
+	static destroy = function(){
+		surface_free(map_surf);
+		surface_free(map_pathfind_surf);
+		surface_free(surf_cmp);
+		surface_free(original_surf_cmp);
+		delete self;
 	}
 }
 
