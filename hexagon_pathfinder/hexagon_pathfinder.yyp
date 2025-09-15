@@ -43,6 +43,7 @@
     {"id":{"name":"shd_cmp","path":"shaders/shd_cmp/shd_cmp.yy",},},
     {"id":{"name":"shd_down_scale","path":"shaders/shd_down_scale/shd_down_scale.yy",},},
     {"id":{"name":"shd_pathfind_basic","path":"shaders/shd_pathfind_basic/shd_pathfind_basic.yy",},},
+    {"id":{"name":"spr_dot_1_1","path":"sprites/spr_dot_1_1/spr_dot_1_1.yy",},},
     {"id":{"name":"spr_hexagon","path":"sprites/spr_hexagon/spr_hexagon.yy",},},
   ],
   "resourceType":"GMProject",
