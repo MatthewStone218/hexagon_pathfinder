@@ -86,7 +86,23 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		buffer_get_surface(map_surf_buffer,map_surf,0);
 	}
 	
-	pathfind = function(){
+	pathfind = function(start_x,start_y,goal_x,goal_y){
+		reset_map_pathfind_surf();
+		var _result;
+		do{
+			_result = step_pathfind(start_x,start_y,goal_x,goal_y);
+		} until(_result[$"status"] != PATHFIND_STATUS.FINDING_PATH)
+		
+		return _result;
+	}
+	
+	step_pathfind = function(start_x,start_y,goal_x,goal_y){
 		
 	}
+}
+
+enum PATHFIND_STATUS{
+	NO_PATH,
+	FOUND_PATH,
+	FINDING_PATH
 }
