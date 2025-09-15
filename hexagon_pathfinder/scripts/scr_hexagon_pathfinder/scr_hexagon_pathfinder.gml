@@ -145,12 +145,12 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		}
 		
 		surface_set_target(surf_cmp[0][0]);
-		draw_surface(original_surf_cmp);
+		draw_clear(c_black);
 		
 		shader_set(shd_cmp)
-		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture())
+		texture_set_stage(cmp_shader_under_texture_uniform_id,surface_get_texture(original_surf_cmp))
 		
-		draw_surface(map_pathfind_surf);
+		draw_surface(map_pathfind_surf,0,0);
 		
 		shader_reset();
 		surface_reset_target();
@@ -158,8 +158,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		shader_set(shd_down_scale);
 		for(var i = array_length(surf_cmp)-1; i > 0; i++){
 			surface_set_target(surf_cmp[i-1][0]);
+			draw_clear(c_black);
 			shader_set_uniform_f(down_scale_shader_size_uniform_id,surf_cmp[i][1],surf_cmp[i][2]);
-			draw_surface(surf_cmp[i][0]);
+			draw_surface(surf_cmp[i][0],0,0);
 		}
 		shader_reset();
 		
@@ -184,7 +185,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		surface_free(map_pathfind_surf);
 		surface_free(surf_cmp);
 		surface_free(original_surf_cmp);
-		delete self;
+		global.hexagon_maps[index]._ = undefined;
 	}
 }
 
