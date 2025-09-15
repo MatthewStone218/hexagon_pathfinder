@@ -17,12 +17,6 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			map[i][ii] = -1;
 		}
 	}
-	for(var i = 0; i < width; i++){
-		for(var ii = 0; ii < height; ii++){
-			map[i][ii*2 + ((i mod 2) == 1)] = TILE_TYPE.TEST_1_COST;
-			map[i][ii*2 + ((i mod 2) == 1) + 1] = TILE_TYPE.TEST_1_COST;
-		}
-	}
 	
 	get_x = function(xx){
 		return xx;
@@ -30,4 +24,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	get_y = function(xx,yy){
 		return yy*2 + ((xx mod 2) == 1);
 	};
+	set_tile = function(xx,yy,val){
+		map[xx][yy*2 + ((xx mod 2) == 1)] = val;
+		map[xx][yy*2 + ((xx mod 2) == 1) + 1] = val;
+	}
 }
