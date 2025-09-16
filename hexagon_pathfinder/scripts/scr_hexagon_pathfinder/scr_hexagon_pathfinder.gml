@@ -160,6 +160,13 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	}
 	
 	static step_pathfind = function(){
+		if(start_x == goal_x && start_y == goal_y){
+			return {
+				status: PATHFIND_STATUS.FOUND_PATH,
+				path_tiles: [goal_x,goal_y],
+			};
+		}
+		
 		if(!surface_exists(map_pathfind_surf)){
 			reset_map_pathfind_surf();
 		}
@@ -186,7 +193,11 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			var _buff = buffer_create(width*height*4,buffer_fixed,1);
 			buffer_get_surface(_buff,map_pathfind_surf,0);
 
-			
+			var _x_index = start_x;
+			var _y_index = start_y;
+			while(_x_index == goal_x && _y_index == goal_y){
+				
+			}
 
 			buffer_delete(_buff);
 			
