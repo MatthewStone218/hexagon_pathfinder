@@ -68,10 +68,9 @@ void main()
 	}
 	
 	bool is_upper_pixel = mod(floor(gl_FragCoord.x) + floor(gl_FragCoord.y),2.0) < 0.5;
-	bool is_odd_horizontally = (gl_FragCoord.x mod 2.0) > 0.5;
-	int checked_time = 0;
+	bool is_odd_horizontally = mod(gl_FragCoord.x,2.0) > 0.5;
 	
-	while(checked_time < 2){
+	for(int checked_time = 0; checked_time < 2; checked_time++){
 		if(is_upper_pixel){
 			if(is_odd_horizontally){
 				//lt
@@ -201,9 +200,7 @@ void main()
 				}
 			}
 		}
-		
 		is_odd_horizontally = !is_odd_horizontally;
-		checked_time += 1;
 	}
 	
 	gl_FragColor = base_color;
