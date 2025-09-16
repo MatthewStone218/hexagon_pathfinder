@@ -38,7 +38,11 @@ void main()
 		return;
 	}
 	
-	bool is_lower_pixel = (mod((mod(v_vTexcoord.x/u_texel.x,2.0)) + (mod(v_vTexcoord.y/u_texel.y,2.0)),2.0)) < 0.1;
+	float pixel_bool = mod(v_vTexcoord.x/(u_texel.x * 2.0), 1.0) + mod(v_vTexcoord.y/(u_texel.y * 2.0), 1.0);
+	bool is_lower_pixel = false;
+	if(pixel_bool > 0.3 && pixel_bool < 0.7){
+		is_lower_pixel = true;
+	}
     
 	if(is_lower_pixel){
 		//lt
@@ -163,4 +167,6 @@ void main()
 			return;
 		}
 	}
+	
+	gl_FragColor = base_color;
 }

@@ -158,8 +158,17 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		var _start_point_status_color = color_get_red(surface_getpixel(map_pathfind_surf,get_map_x(start_x),get_map_y(start_x,start_y)[0]));
 		if(_start_point_status_color == 255){
+			var _path_tiles = [];
+			
+			var _buff = buffer_create(width*height*4,buffer_fixed,1);
+			buffer_get_surface(_buff,map_pathfind_surf,0);
+
+
+			buffer_delete(_buff);
+			
 			return {
 				status: PATHFIND_STATUS.FOUND_PATH,
+				path_tiles: _path_tiles,
 			};
 		} else if(_start_point_status_color > 255*0.1 && _start_point_status_color < 255*0.4){
 			return {
