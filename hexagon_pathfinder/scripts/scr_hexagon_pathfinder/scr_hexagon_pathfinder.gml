@@ -203,7 +203,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			while(_x_index != goal_x || _y_index != goal_y){
 				var _x = get_map_x(_x_index);
 				var _y = get_map_y(_x_index,_y_index)[0];
-				var _vertical_odd = _y_index mod 2;
+				var _vertical_odd = _x_index mod 2;
 				var _dir = buffer_peek(_buff, (_y*width+_x)*4 + 2, buffer_u8);
 				
 				if(abs(_dir-10) < 0.1){
