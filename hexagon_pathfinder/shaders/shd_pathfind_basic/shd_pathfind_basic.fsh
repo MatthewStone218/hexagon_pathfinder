@@ -3,7 +3,10 @@
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+
 uniform vec2 u_texel;
+uniform float u_horizontal_repeat;
+uniform float u_certical_repeat;
 
 float move_point = 0.0;
 
@@ -15,6 +18,32 @@ bool consume_move_point(){
 		move_point -= 0.03921568627;// 10/255
 		return false;
 	}
+}
+
+bool check_red(xx,yy){
+	if(xx < 0.0){
+		if(!horizontal_repeat){
+			return false;
+		}
+		xx = 1.0-u_texel.x;
+	} else if(xx > 1.0){
+		if(!horizontal_repeat){
+			return false;
+		}
+		xx = u_texel.x;
+	}
+	if(yy < 0.0){
+		if(!vertical_repeat){
+			return false;
+		}
+		yy = 1.0-u_texel.y;
+	} else if(yy > 1.0){
+		if(!horizontal_repeat){
+			return false;
+		}
+		yy = u_texel.y;
+	}
+	return texture2D( gm_BaseTexture, vec2(xx,yy) ).r == 1.0;
 }
 
 void main()
@@ -39,7 +68,7 @@ void main()
 	}
 	
 	bool is_upper_pixel = mod(floor(gl_FragCoord.x) + floor(gl_FragCoord.y),2.0) < 0.5;
-    
+	
 	if(is_upper_pixel){
 		//lt
 	    if(v_vTexcoord.x-u_texel.x >= 0.0 && texture2D( gm_BaseTexture, vec2(v_vTexcoord.x-u_texel.x,v_vTexcoord.y) ).r == 1.0){
