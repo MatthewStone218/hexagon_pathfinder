@@ -20,6 +20,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	shader = shd_pathfind_basic;
 	static cmp_shader_under_texture_uniform_id = shader_get_uniform(shd_cmp,"u_underTexture");
 	static pathfind_shader_texel_uniform_id = shader_get_uniform(shd_pathfind_basic,"u_texel");
+	static pathfind_shader_horizontal_repeat_uniform_id = shader_get_uniform(shd_pathfind_basic,"u_horizontal_repeat");
+	static pathfind_shader_vertical_repeat_uniform_id = shader_get_uniform(shd_pathfind_basic,"u_vertical_repeat");
 	
 	width = w;
 	height = h;
@@ -184,6 +186,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		shader_set(shader);
 		shader_set_uniform_f(pathfind_shader_texel_uniform_id,texture_get_texel_width(surface_get_texture(map_pathfind_surf)),texture_get_texel_height(surface_get_texture(map_pathfind_surf)));
+		shader_set_uniform_i(pathfind_shader_horizontal_repeat_uniform_id,horizontal_repeat);
+		shader_set_uniform_i(pathfind_shader_vertical_repeat_uniform_id,vertical_repeat);
 		
 		draw_surface(original_surf_cmp,0,0);
 		
