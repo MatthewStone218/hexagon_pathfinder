@@ -103,7 +103,7 @@ void main()
 		}
 	} else {
 		//lt
-	    if(v_vTexcoord.x-u_texel.x >= 0.0 && v_vTexcoord.y-u_texel.y >= 1.0 && texture2D( gm_BaseTexture, vec2(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y) ).r == 1.0){
+	    if(v_vTexcoord.x-u_texel.x >= 0.0 && v_vTexcoord.y-u_texel.y >= 0.0 && texture2D( gm_BaseTexture, vec2(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y) ).r == 1.0){
 			//consume move point
 			if(consume_move_point()){
 				gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
@@ -123,7 +123,7 @@ void main()
 			return;
 		}
 		//rt
-	    if(v_vTexcoord.x+u_texel.x <= 1.0 && v_vTexcoord.y-u_texel.y <= 0.0 && texture2D( gm_BaseTexture, vec2(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y) ).r == 1.0){
+	    if(v_vTexcoord.x+u_texel.x <= 1.0 && v_vTexcoord.y-u_texel.y >= 0.0 && texture2D( gm_BaseTexture, vec2(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y) ).r == 1.0){
 			//consume move point
 			if(consume_move_point()){
 				gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
