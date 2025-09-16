@@ -296,7 +296,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	static set_surf_goal_cost = function(goal_cost){
 		reset_map_pathfind_surf();
 		surface_set_target(map_pathfind_surf);
-		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y*2 + (goal_y mod 2),1,2,0,make_color_rgb(255,goal_cost,0),1);
+		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y*2 + (goal_x mod 2),1,2,0,make_color_rgb(255,goal_cost,0),1);
 		surface_reset_target();
 	}
 	
