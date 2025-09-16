@@ -192,7 +192,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		var _start_point_status_color = color_get_red(surface_getpixel(map_pathfind_surf,get_map_x(start_x),get_map_y(start_x,start_y)[0]));
 		if(_start_point_status_color == 255){
-			var _path_tiles = [start_x,start_y];
+			var _path_tiles = [[start_x,start_y]];
 			
 			var _buff = buffer_create(width*height*4,buffer_fixed,1);
 			buffer_get_surface(_buff,map_pathfind_surf,0);
@@ -202,38 +202,34 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			
 			while(_x_index != goal_x || _y_index != goal_y){
 				var _x = get_map_x(_x_index);
-				var _y = get_map_y(_y_index)[0];
-				var _odd = (_x_index + _y_index) mod 2;
-				var _dir = buffer_peek(_buff, _y*width+_x + 1, buffer_u8);
+				var _y = get_map_y(_x_index,_y_index)[0];
+				var _vertical_odd = _y_index mod 2;
+				var _dir = buffer_peek(_buff, (_y*width+_x)*4 + 2, buffer_u8);
 				
 				if(abs(_dir-10) < 0.1){
 					_x_index = _x_index-1;
-					_y_index = _odd ? _y_index+1 : _y_index;
-					array_push(_path_tiles,[_x_index,_y_index]);
+					_y_index = _vertical_odd ? _y_index : _y_index-1;
 				} else if(abs(_dir-30) < 0.1){
 					_y_index = _y_index-1;
-					array_push(_path_tiles,[_x_index,_y_index]);
 				} else if(abs(_dir-50) < 0.1){
 					_x_index = _x_index+1;
-					_y_index = _odd ? _y_index : _y_index-1;
-					array_push(_path_tiles,[_x_index,_y_index]);
+					_y_index = _vertical_odd ? _y_index : _y_index-1;
 				} else if(abs(_dir-70) < 0.1){
 					_x_index = _x_index-1;
-					_y_index = _odd ? _y_index : _y_index+1;
-					array_push(_path_tiles,[_x_index,_y_index]);
+					_y_index = _vertical_odd ? _y_index : _y_index+1;
 				} else if(abs(_dir-90) < 0.1){
 					_y_index = _y_index+1;
-					array_push(_path_tiles,[_x_index,_y_index]);
 				} else if(abs(_dir-110) < 0.1){
-					_x_index = _x_index-1;
-					_y_index = _odd ? _y_index : _y_index+1;
-					array_push(_path_tiles,[_x_index,_y_index]);
+					_x_index = _x_index+1;
+					_y_index = _vertical_odd ? _y_index+1 : _y_index;
 				} else {
 					buffer_delete(_buff);
 					return {
 						status: PATHFIND_STATUS.FOUND_PATH_BUT_NO_DIR,
 					};
 				}
+				array_push(_path_tiles,[_x_index,_y_index]);
+				show_message($"{_dir}\n\n{_path_tiles}")
 			}
 
 			buffer_delete(_buff);
