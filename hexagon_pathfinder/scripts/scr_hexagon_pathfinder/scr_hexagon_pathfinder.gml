@@ -140,8 +140,6 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		if(!surface_exists(map_pathfind_surf)){
 			reset_map_pathfind_surf();
 		}
-		shader_set(shader);
-		shader_set_uniform_f(pathfind_shader_texel_uniform_id,texture_get_texel_width(surface_get_texture(map_pathfind_surf)),texture_get_texel_height(surface_get_texture(map_pathfind_surf)));
 
 		if(!surface_exists(original_surf_cmp)){
 			surface_create(original_surf_cmp,array_length(map),array_length(map[0]));
@@ -149,6 +147,9 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		surface_copy(original_surf_cmp,0,0,map_pathfind_surf);
 		surface_set_target(map_pathfind_surf);
+		
+		shader_set(shader);
+		shader_set_uniform_f(pathfind_shader_texel_uniform_id,texture_get_texel_width(surface_get_texture(map_pathfind_surf)),texture_get_texel_height(surface_get_texture(map_pathfind_surf)));
 		
 		draw_surface(original_surf_cmp,0,0);
 		
@@ -221,7 +222,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	static set_surf_goal_cost = function(goal_cost){
 		reset_map_pathfind_surf();
 		surface_set_target(map_pathfind_surf);
-		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y,1,1,0,make_color_rgb(goal_cost,0,0),1);
+		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y,1,2,0,make_color_rgb(255,goal_cost,0),1);
 		surface_reset_target();
 	}
 	
