@@ -71,134 +71,139 @@ void main()
 	bool is_odd_horizontally = (gl_FragCoord.x mod 2.0) > 0.5;
 	int checked_time = 0;
 	
-	if(is_upper_pixel){
-		if(is_odd_horizontally){
-			//lt
-		    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
+	while(checked_time < 2){
+		if(is_upper_pixel){
+			if(is_odd_horizontally){
+				//lt
+			    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
-				return;
-			}
-			//t
-		    if(check_red(v_vTexcoord.x,v_vTexcoord.y-u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.1176,1.0);
+				//t
+			    if(check_red(v_vTexcoord.x,v_vTexcoord.y-u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.1176,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
-				return;
-			}
-			//rt
-		    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
+				//rt
+			    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
-				return;
-			}
-		} else {
-			//lb
-		    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y+u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+			} else {
+				//lb
+			    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y+u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
-				return;
-			}
-			//b
-		    if(check_red(v_vTexcoord.x,v_vTexcoord.y+u_texel.y+u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.3529,1.0);
+				//b
+			    if(check_red(v_vTexcoord.x,v_vTexcoord.y+u_texel.y+u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.3529,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.3529,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.3529,1.0);
-				return;
-			}
-			//rb
-		    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y+u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.4314,1.0);
+				//rb
+			    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y+u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.4314,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
-				return;
-			}
-		}
-	} else {
-		if(is_odd_horizontally){
-			//lt
-		    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
-					return;
-				}
-				gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
-				return;
-			}
-			//t
-		    if(check_red(v_vTexcoord.x,v_vTexcoord.y-u_texel.y-u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.1176,1.0);
-					return;
-				}
-				gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
-				return;
-			}
-			//rt
-		    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
-					return;
-				}
-				gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
-				return;
 			}
 		} else {
-			//lb
-		    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+			if(is_odd_horizontally){
+				//lt
+			    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
-				return;
-			}
-			//b
-		    if(check_red(v_vTexcoord.x,v_vTexcoord.y+u_texel.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.3529,1.0);
+				//t
+			    if(check_red(v_vTexcoord.x,v_vTexcoord.y-u_texel.y-u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.1176,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.3529,1.0);
-				return;
-			}
-			//rb
-		    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y)){
-				//consume move point
-				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.4314,1.0);
+				//rt
+			    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
 					return;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
-				return;
+			} else {
+				//lb
+			    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
+					return;
+				}
+				//b
+			    if(check_red(v_vTexcoord.x,v_vTexcoord.y+u_texel.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.3529,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.3529,1.0);
+					return;
+				}
+				//rb
+			    if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y)){
+					//consume move point
+					if(consume_move_point()){
+						gl_FragColor = vec4(1.0,0.0,0.4314,1.0);
+						return;
+					}
+					gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
+					return;
+				}
 			}
 		}
+		
+		is_odd_horizontally = !is_odd_horizontally;
+		checked_time += 1;
 	}
 	
 	gl_FragColor = base_color;
