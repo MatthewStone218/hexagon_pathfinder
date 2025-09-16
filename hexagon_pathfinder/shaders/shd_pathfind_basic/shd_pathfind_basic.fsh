@@ -6,7 +6,7 @@ varying vec4 v_vColour;
 
 uniform vec2 u_texel;
 uniform bool u_horizontal_repeat;
-uniform bool u_certical_repeat;
+uniform bool u_vertical_repeat;
 
 float move_point = 0.0;
 
@@ -22,23 +22,23 @@ bool consume_move_point(){
 
 bool check_red(xx,yy){
 	if(xx < 0.0){
-		if(!horizontal_repeat){
+		if(!u_horizontal_repeat){
 			return false;
 		}
 		xx = 1.0-u_texel.x;
 	} else if(xx > 1.0){
-		if(!horizontal_repeat){
+		if(!u_horizontal_repeat){
 			return false;
 		}
 		xx = u_texel.x;
 	}
 	if(yy < 0.0){
-		if(!vertical_repeat){
+		if(!u_vertical_repeat){
 			return false;
 		}
 		yy = 1.0-u_texel.y;
 	} else if(yy > 1.0){
-		if(!horizontal_repeat){
+		if(!u_vertical_repeat){
 			return false;
 		}
 		yy = u_texel.y;
