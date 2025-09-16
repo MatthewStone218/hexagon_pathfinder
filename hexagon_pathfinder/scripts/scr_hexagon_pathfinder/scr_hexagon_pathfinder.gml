@@ -83,14 +83,15 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	}
 	
 	static get_map_y = function(xx,yy){
-		var _upper_coord = yy*2 + ((xx mod 2) == 1);
+		var _upper_coord = yy*2 + (xx mod 2);
 		var _lower_coord = _upper_coord+1;
-		if(_upper_coord+1 >= height*2 + (width >= 2) - 1){
-			if(vertical_repeat){
-				_lower_coord = 0;
-			} else {
-				_lower_coord = -1;
-			}
+		
+		if(vertical_repeat){
+			_upper_coord = _upper_coord mod (height*2 + (width >= 2));
+			_lower_coord = _lower_coord mod (height*2 + (width >= 2));
+		} else {
+			_upper_coord = median(_upper_coord,0,(height*2 + (width >= 2))-1);
+			_lower_coord = median(_lower_coord,0,(height*2 + (width >= 2))-1);
 		}
 		
 		return [_upper_coord,_lower_coord];
