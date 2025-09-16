@@ -79,6 +79,12 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	buffer_get_surface(map_surf_buffer,map_surf,0);
 	
 	static get_map_x = function(xx){
+		if(horizontal_repeat){
+			xx = xx mod width;
+		} else {
+			xx = median(xx,0,width-1);
+		}
+		
 		return xx;
 	}
 	
