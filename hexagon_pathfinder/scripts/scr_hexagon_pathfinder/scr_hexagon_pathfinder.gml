@@ -94,19 +94,13 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return [_upper_coord,_lower_coord];
 	}
 	
-	static get_indexed_map_x = function(xx){
-		if(xx < 0){
-			if(horizontal_repeat){
-				return width-1;
-			} else {
-				return 0;
-			}
-		}
-		return xx;
+	static get_indexed_map_x_from_surf_coord = function(xx){
+		return get_repeated_indexed_x_from_index(xx);
 	}
 	
-	static get_indexed_map_y = function(xx,yy){
+	static get_indexed_map_y_from_surf_coord = function(xx,yy){
 		var _index_y = floor(yy/2) - (xx mod 2);
+		_index_y = get_repeated_indexed_y_from_index(yy);
 		if(_index_y < 0){
 			if(vertical_repeat){
 				return height-1;
@@ -115,6 +109,16 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			}
 		}
 		return _index_y;
+	}
+	
+	static get_repeated_index = function(_idx,length){
+		if(_idx < 0){
+			return length-_idx;
+		}
+		if(_idx >= length){
+			return length-_idx;
+		}
+		return _idx;
 	}
 	
 	static set_map_value = function(xx,yy,val){
@@ -188,15 +192,48 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		var _start_point_status_color = color_get_red(surface_getpixel(map_pathfind_surf,get_map_x(start_x),get_map_y(start_x,start_y)[0]));
 		if(_start_point_status_color == 255){
-			var _path_tiles = [];
+			var _path_tiles = [start_x,start_y];
 			
 			var _buff = buffer_create(width*height*4,buffer_fixed,1);
 			buffer_get_surface(_buff,map_pathfind_surf,0);
 
 			var _x_index = start_x;
 			var _y_index = start_y;
-			while(_x_index == goal_x && _y_index == goal_y){
+			
+			while(_x_index != goal_x || _y_index != goal_y){
+				var _x = get_map_x(_x_index);
+				var _y = get_map_y(_y_index)[0];
+				var _odd = (_x_index + _y_index) mod 2;
+				var _dir = buffer_peek(_buff, _y*width+_x + 1, buffer_u8);
 				
+				if(abs(_dir-10) < 0.1){
+					_x_index = _x_index-1;
+					_y_index = _odd ? _y_index+1 : _y_index;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else if(abs(_dir-30) < 0.1){
+					_y_index = _y_index-1;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else if(abs(_dir-50) < 0.1){
+					_x_index = _x_index+1;
+					_y_index = _odd ? _y_index : _y_index-1;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else if(abs(_dir-70) < 0.1){
+					_x_index = _x_index-1;
+					_y_index = _odd ? _y_index : _y_index+1;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else if(abs(_dir-90) < 0.1){
+					_y_index = _y_index+1;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else if(abs(_dir-110) < 0.1){
+					_x_index = _x_index-1;
+					_y_index = _odd ? _y_index : _y_index+1;
+					array_push(_path_tiles,[_x_index,_y_index]);
+				} else {
+					buffer_delete(_buff);
+					return {
+						status: PATHFIND_STATUS.FOUND_PATH_BUT_NO_DIR,
+					};
+				}
 			}
 
 			buffer_delete(_buff);
@@ -294,4 +331,5 @@ enum PATHFIND_STATUS{
 	FINDING_PATH,
 	STUCK_ON_WALL,
 	NO_PATH,
+	FOUND_PATH_BUT_NO_DIR,
 }
