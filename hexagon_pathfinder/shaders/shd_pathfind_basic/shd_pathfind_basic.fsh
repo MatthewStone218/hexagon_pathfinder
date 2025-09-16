@@ -20,7 +20,7 @@ bool consume_move_point(){
 	}
 }
 
-bool check_red(xx,yy){
+bool check_red(float xx,float yy){
 	if(xx < 0.0){
 		if(!u_horizontal_repeat){
 			return false;
@@ -71,7 +71,7 @@ void main()
 	
 	if(is_upper_pixel){
 		//lt
-	    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord)){
+	    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
 			//consume move point
 			if(consume_move_point()){
 				gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
@@ -101,7 +101,7 @@ void main()
 			return;
 		}
 		//lb
-	    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y+u_texel.y){
+	    if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y+u_texel.y)){
 			//consume move point
 			if(consume_move_point()){
 				gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
