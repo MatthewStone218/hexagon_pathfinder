@@ -194,19 +194,15 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		var _start_point_status_color = color_get_red(surface_getpixel(map_pathfind_surf,get_map_x(start_x),get_map_y(start_x,start_y)[0]));
 		if(_start_point_status_color == 255){
-			var _path_tiles = [];
+			var _path_tiles = [start_x,start_y];
 			
 			var _buff = buffer_create(width*height*4,buffer_fixed,1);
 			buffer_get_surface(_buff,map_pathfind_surf,0);
 
-			var _x_index = start_x;
-			var _y_index = start_y;
+			var	_x_index = get_repeated_number(start_x,width,horizontal_repeat);
+			var	_y_index = get_repeated_number(start_y,height,vertical_repeat);
 			
 			do{
-				_x_index = get_repeated_number(_x_index,width,horizontal_repeat);
-				_y_index = get_repeated_number(_y_index,height,vertical_repeat);
-				array_push(_path_tiles,[_x_index,_y_index]);
-				
 				var _x = get_map_x(_x_index);
 				var _y = get_map_y(_x_index,_y_index)[0];
 				var _odd = _x_index mod 2;
@@ -228,10 +224,13 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 				} else if(abs(_dir-110) < 0.1){
 					_x_index = _x_index+1;
 					_y_index = _odd ? _y_index+1 : _y_index;
-				} else {
-					break;
 				}
-			} until(_x_index == goal_x && _y_index == goal_y)
+				
+				_x_index = get_repeated_number(_x_index,width,horizontal_repeat);
+				_y_index = get_repeated_number(_y_index,height,vertical_repeat);
+				array_push(_path_tiles,[_x_index,_y_index]);
+				
+			} until((_x_index == goal_x || _x_index+1 == goal_x) && (_y_index == goal_y || _y_index+1 == goal_y))
 
 			buffer_delete(_buff);
 			
