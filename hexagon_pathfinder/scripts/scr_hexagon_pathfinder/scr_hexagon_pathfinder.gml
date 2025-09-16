@@ -207,7 +207,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 				var _y = get_map_y(_x_index,_y_index)[0];
 				var _odd = _x_index mod 2;
 				var _dir = buffer_peek(_buff, (_y*width+_x)*4 + 2, buffer_u8);
-				show_message($"{_dir}\n\n{_path_tiles}\n{_x}\n{_y}")
+				
 				if(abs(_dir-10) < 0.1){
 					_x_index = _x_index-1;
 					_y_index = _odd ? _y_index : _y_index-1;
@@ -229,8 +229,8 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 				_x_index = get_repeated_number(_x_index,width,horizontal_repeat);
 				_y_index = get_repeated_number(_y_index,height,vertical_repeat);
 				array_push(_path_tiles,[_x_index,_y_index]);
-				
-			} until((_x_index == goal_x || _x_index+1 == goal_x) && (_y_index == goal_y || _y_index+1 == goal_y))
+				show_message($"{_dir}\n\n{_path_tiles}\n{_x_index} {_y_index}\n{goal_x} {goal_y}")
+			} until(_y_index == goal_y || _y_index+(_x_index mod 2) == goal_y)
 
 			buffer_delete(_buff);
 			
@@ -285,21 +285,19 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		};
 	}
 	
-	static ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,goal_cost = -1,_shader = shd_pathfind_basic){
+	static ready_pathfind = function(_start_x,_start_y,_goal_x,_goal_y,goal_cost = 0,_shader = shd_pathfind_basic){
 		start_x = _start_x;
 		start_y = _start_y;
-		goal_x = _goal_x;
-		goal_y = _goal_y;
+		goal_x = get_repeated_number(_goal_x,width,horizontal_repeat);
+		goal_y = get_repeated_number(_goal_y,height,vertical_repeat);
 		shader = _shader;
-		if(goal_cost != -1){
-			set_surf_goal_cost(goal_cost);
-		}
+		set_surf_goal_cost(goal_cost);
 	}
 	
 	static set_surf_goal_cost = function(goal_cost){
 		reset_map_pathfind_surf();
 		surface_set_target(map_pathfind_surf);
-		draw_sprite_ext(spr_dot_1_1,0,get_repeated_number(goal_x,width,horizontal_repeat),get_repeated_number(goal_y,height,vertical_repeat),1,2,0,make_color_rgb(255,goal_cost,0),1);
+		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y*2 + (goal_y mod 2),1,2,0,make_color_rgb(255,goal_cost,0),1);
 		surface_reset_target();
 	}
 	
