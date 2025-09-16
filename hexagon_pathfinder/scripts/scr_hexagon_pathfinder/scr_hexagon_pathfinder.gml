@@ -94,13 +94,13 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return [_upper_coord,_lower_coord];
 	}
 	
-	static get_indexed_map_x_from_surf_coord = function(xx){
+	static get_indexed_x_from_surf_coord = function(xx){
 		return get_repeated_index(xx,width);
 	}
 	
-	static get_indexed_map_y_from_surf_coord = function(xx,yy){
+	static get_indexed_y_from_surf_coord = function(xx,yy){
+		yy = get_repeated_index(yy,height);
 		var _index_y = floor(yy/2) - (xx mod 2);
-		_index_y = get_repeated_index(yy,height);
 		if(_index_y < 0){
 			if(vertical_repeat){
 				return height-1;
