@@ -89,26 +89,19 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	}
 	
 	static get_map_y = function(xx,yy){
-		var _upper_coord = yy*2 + (xx mod 2);
-		var _lower_coord = _upper_coord+1;
-		
-		if(vertical_repeat){
-			_upper_coord = _upper_coord mod (height*2 + (width >= 2));
-			_lower_coord = _lower_coord mod (height*2 + (width >= 2));
-		} else {
-			_upper_coord = median(_upper_coord,0,(height*2 + (width >= 2))-1);
-			_lower_coord = median(_lower_coord,0,(height*2 + (width >= 2))-1);
-		}
+		var _upper_coord = get_repeated_number(yy*2,height,vertical_repeat);
+		_upper_coord += xx mod 2;
+		var _lower_coord = get_repeated_number(_upper_coord+1,height,vertical_repeat);
 		
 		return [_upper_coord,_lower_coord];
 	}
 	
 	static get_indexed_x_from_surf_coord = function(xx){
-		return get_repeated_index(xx,width);
+		return get_repeated_number(xx,width,horizontal_repeat);
 	}
 	
 	static get_indexed_y_from_surf_coord = function(xx,yy){
-		yy = get_repeated_index(yy,height);
+		yy = get_repeated_number(yy,height,vertical_repeat);
 		var _index_y = floor(yy/2) - (xx mod 2);
 		if(_index_y < 0){
 			if(vertical_repeat){
@@ -120,14 +113,12 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		return _index_y;
 	}
 	
-	static get_repeated_index = function(_idx,length){
-		if(_idx < 0){
-			return length-_idx;
+	static get_repeated_number = function(_idx,length,_repeat){
+		if(_repeat){
+			return _idx mod length;
+		} else {
+			return median(_idx,0,length-1);
 		}
-		if(_idx >= length){
-			return length-_idx;
-		}
-		return _idx;
 	}
 	
 	static set_map_value = function(xx,yy,val){
@@ -203,7 +194,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 		
 		var _start_point_status_color = color_get_red(surface_getpixel(map_pathfind_surf,get_map_x(start_x),get_map_y(start_x,start_y)[0]));
 		if(_start_point_status_color == 255){
-			var _path_tiles = [[start_x,start_y]];
+			var _path_tiles = [];
 			
 			var _buff = buffer_create(width*height*4,buffer_fixed,1);
 			buffer_get_surface(_buff,map_pathfind_surf,0);
@@ -211,37 +202,36 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 			var _x_index = start_x;
 			var _y_index = start_y;
 			
-			while(_x_index != goal_x || _y_index != goal_y){
+			do{
+				_x_index = get_repeated_number(_x_index,width,horizontal_repeat);
+				_y_index = get_repeated_number(_y_index,height,vertical_repeat);
+				array_push(_path_tiles,[_x_index,_y_index]);
+				
 				var _x = get_map_x(_x_index);
 				var _y = get_map_y(_x_index,_y_index)[0];
-				var _vertical_odd = _x_index mod 2;
+				var _odd = _x_index mod 2;
 				var _dir = buffer_peek(_buff, (_y*width+_x)*4 + 2, buffer_u8);
-				
+				show_message($"{_dir}\n\n{_path_tiles}\n{_x}\n{_y}")
 				if(abs(_dir-10) < 0.1){
 					_x_index = _x_index-1;
-					_y_index = _vertical_odd ? _y_index : _y_index-1;
+					_y_index = _odd ? _y_index : _y_index-1;
 				} else if(abs(_dir-30) < 0.1){
 					_y_index = _y_index-1;
 				} else if(abs(_dir-50) < 0.1){
 					_x_index = _x_index+1;
-					_y_index = _vertical_odd ? _y_index : _y_index-1;
+					_y_index = _odd ? _y_index : _y_index-1;
 				} else if(abs(_dir-70) < 0.1){
 					_x_index = _x_index-1;
-					_y_index = _vertical_odd ? _y_index : _y_index+1;
+					_y_index = _odd ? _y_index+1 : _y_index;
 				} else if(abs(_dir-90) < 0.1){
 					_y_index = _y_index+1;
 				} else if(abs(_dir-110) < 0.1){
 					_x_index = _x_index+1;
-					_y_index = _vertical_odd ? _y_index+1 : _y_index;
+					_y_index = _odd ? _y_index+1 : _y_index;
 				} else {
-					buffer_delete(_buff);
-					return {
-						status: PATHFIND_STATUS.FOUND_PATH_BUT_NO_DIR,
-					};
+					break;
 				}
-				array_push(_path_tiles,[_x_index,_y_index]);
-				show_message($"{_dir}\n\n{_path_tiles}")
-			}
+			} until(_x_index == goal_x && _y_index == goal_y)
 
 			buffer_delete(_buff);
 			
@@ -310,7 +300,7 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 	static set_surf_goal_cost = function(goal_cost){
 		reset_map_pathfind_surf();
 		surface_set_target(map_pathfind_surf);
-		draw_sprite_ext(spr_dot_1_1,0,goal_x,goal_y,1,2,0,make_color_rgb(255,goal_cost,0),1);
+		draw_sprite_ext(spr_dot_1_1,0,get_repeated_number(goal_x,width,horizontal_repeat),get_repeated_number(goal_y,height,vertical_repeat),1,2,0,make_color_rgb(255,goal_cost,0),1);
 		surface_reset_target();
 	}
 	
