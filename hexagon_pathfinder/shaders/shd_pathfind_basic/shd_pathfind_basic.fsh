@@ -59,7 +59,6 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 				gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
 				return true;
 			}
-			
 			//lt
 			if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
 				//consume move point
@@ -124,39 +123,27 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 				gl_FragColor = vec4(0.7,move_point,0.1176,1.0);
 				return true;
 			}
-			if(is_odd_verticaly){
-				//lt
-				if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y)){
-					//consume move point
-					if(consume_move_point()){
-						gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
-						return true;
-					}
-					gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
-					return true;
-				}
-				//rt
-				if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y)){
-					//consume move point
-					if(consume_move_point()){
-						gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
-						return true;
-					}
-					gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
-					return true;
-				}
-			}
-		} else {
-			//lb
-			if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
+			//rt
+			if(check_red(v_vTexcoord.x+u_texel.x,v_vTexcoord.y-u_texel.y)){
 				//consume move point
 				if(consume_move_point()){
-					gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+					gl_FragColor = vec4(1.0,0.0,0.1961,1.0);
 					return true;
 				}
-				gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
+				gl_FragColor = vec4(0.7,move_point,0.1961,1.0);
 				return true;
 			}
+			//lt
+			if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y-u_texel.y)){
+				//consume move point
+				if(consume_move_point()){
+					gl_FragColor = vec4(1.0,0.0,0.0392,1.0);
+					return true;
+				}
+				gl_FragColor = vec4(0.7,move_point,0.0392,1.0);
+				return true;
+			}
+		} else {
 			//b
 			if(check_red(v_vTexcoord.x,v_vTexcoord.y+u_texel.y)){
 				//consume move point
@@ -175,6 +162,16 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 					return true;
 				}
 				gl_FragColor = vec4(0.7,move_point,0.4314,1.0);
+				return true;
+			}
+			//lb
+			if(check_red(v_vTexcoord.x-u_texel.x,v_vTexcoord.y)){
+				//consume move point
+				if(consume_move_point()){
+					gl_FragColor = vec4(1.0,0.0,0.2745,1.0);
+					return true;
+				}
+				gl_FragColor = vec4(0.7,move_point,0.2745,1.0);
 				return true;
 			}
 		}
