@@ -229,7 +229,6 @@ function __class_hexagon_map__(w,h,h_repeat,v_repeat) constructor {
 				_x_index = get_repeated_number(_x_index,width,horizontal_repeat);
 				_y_index = get_repeated_number(_y_index,height,vertical_repeat);
 				array_push(_path_tiles,[_x_index,_y_index]);
-				show_message($"{_dir}\n\n{_path_tiles}\n{_x_index} {_y_index}\n{goal_x} {goal_y}")
 			} until(_x_index == goal_x && (_y_index == goal_y || _y_index+(_x_index mod 2) == goal_y))
 
 			buffer_delete(_buff);
