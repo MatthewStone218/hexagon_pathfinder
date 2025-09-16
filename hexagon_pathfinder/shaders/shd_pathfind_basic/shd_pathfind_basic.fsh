@@ -139,16 +139,16 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 			if(calculate_tile_lb(1.0)){
 				return true;
 			}
+			//lt
+			if(calculate_tile_lt(0.0)){
+				return true;
+			}
 			//rt
 			if(calculate_tile_rt(0.0)){
 				return true;
 			}
 			//rb
 			if(calculate_tile_rb(1.0)){
-				return true;
-			}
-			//lt
-			if(calculate_tile_lt(0.0)){
 				return true;
 			}
 		} else {
@@ -164,16 +164,16 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 			if(calculate_tile_rb(1.0)){
 				return true;
 			}
+			//rt
+			if(calculate_tile_rt(0.0)){
+				return true;
+			}
 			//lt
 			if(calculate_tile_lt(0.0)){
 				return true;
 			}
 			//lb
 			if(calculate_tile_lb(1.0)){
-				return true;
-			}
-			//rt
-			if(calculate_tile_rt(0.0)){
 				return true;
 			}
 		}
@@ -191,16 +191,16 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 			if(calculate_tile_lb(0.0)){
 				return true;
 			}
-			//rt
-			if(calculate_tile_rt(-1.0)){
+			//lt
+			if(calculate_tile_lt(-1.0)){
 				return true;
 			}
 			//rb
 			if(calculate_tile_rb(0.0)){
 				return true;
 			}
-			//lt
-			if(calculate_tile_lt(-1.0)){
+			//rt
+			if(calculate_tile_rt(-1.0)){
 				return true;
 			}
 		} else {
@@ -216,16 +216,16 @@ bool pathfind(bool is_upper_pixel, bool is_odd_horizontally){
 			if(calculate_tile_rb(0.0)){
 				return true;
 			}
-			//lt
-			if(calculate_tile_lt(-1.0)){
+			//rt
+			if(calculate_tile_rt(-1.0)){
 				return true;
 			}
 			//lb
 			if(calculate_tile_lb(0.0)){
 				return true;
 			}
-			//rt
-			if(calculate_tile_rt(-1.0)){
+			//lt
+			if(calculate_tile_lt(-1.0)){
 				return true;
 			}
 		}
